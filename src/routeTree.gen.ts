@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as LanguageRouteImport } from './routes/language'
+import { Route as MasterAdminRouteImport } from './routes/master-admin'
 import { Route as PatientRouteImport } from './routes/patient'
 import { Route as RoleRouteImport } from './routes/role'
 
@@ -30,6 +31,11 @@ const LanguageRoute = LanguageRouteImport.update({
   path: '/language',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MasterAdminRoute = MasterAdminRouteImport.update({
+  id: '/master-admin',
+  path: '/master-admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PatientRoute = PatientRouteImport.update({
   id: '/patient',
   path: '/patient',
@@ -45,6 +51,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/language': typeof LanguageRoute
+  '/master-admin': typeof MasterAdminRoute
   '/patient': typeof PatientRoute
   '/role': typeof RoleRoute
 }
@@ -52,6 +59,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/language': typeof LanguageRoute
+  '/master-admin': typeof MasterAdminRoute
   '/patient': typeof PatientRoute
   '/role': typeof RoleRoute
 }
@@ -60,21 +68,31 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/language': typeof LanguageRoute
+  '/master-admin': typeof MasterAdminRoute
   '/patient': typeof PatientRoute
   '/role': typeof RoleRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/admin' | '/language' | '/patient' | '/role'
+  fullPaths:
+    '/' | '/admin' | '/language' | '/master-admin' | '/patient' | '/role'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/language' | '/patient' | '/role'
-  id: '__root__' | '/' | '/admin' | '/language' | '/patient' | '/role'
+  to: '/' | '/admin' | '/language' | '/master-admin' | '/patient' | '/role'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/language'
+    | '/master-admin'
+    | '/patient'
+    | '/role'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
   LanguageRoute: typeof LanguageRoute
+  MasterAdminRoute: typeof MasterAdminRoute
   PatientRoute: typeof PatientRoute
   RoleRoute: typeof RoleRoute
 }
@@ -102,6 +120,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LanguageRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/master-admin': {
+      id: '/master-admin'
+      path: '/master-admin'
+      fullPath: '/master-admin'
+      preLoaderRoute: typeof MasterAdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/patient': {
       id: '/patient'
       path: '/patient'
@@ -123,6 +148,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
   LanguageRoute: LanguageRoute,
+  MasterAdminRoute: MasterAdminRoute,
   PatientRoute: PatientRoute,
   RoleRoute: RoleRoute,
 }
