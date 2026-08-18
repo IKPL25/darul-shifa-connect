@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LanguageRouteImport } from './routes/language'
+import { Route as PatientRouteImport } from './routes/patient'
 import { Route as RoleRouteImport } from './routes/role'
 
 const IndexRoute = IndexRouteImport.update({
@@ -23,6 +24,11 @@ const LanguageRoute = LanguageRouteImport.update({
   path: '/language',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PatientRoute = PatientRouteImport.update({
+  id: '/patient',
+  path: '/patient',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RoleRoute = RoleRouteImport.update({
   id: '/role',
   path: '/role',
@@ -32,30 +38,34 @@ const RoleRoute = RoleRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/language': typeof LanguageRoute
+  '/patient': typeof PatientRoute
   '/role': typeof RoleRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/language': typeof LanguageRoute
+  '/patient': typeof PatientRoute
   '/role': typeof RoleRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/language': typeof LanguageRoute
+  '/patient': typeof PatientRoute
   '/role': typeof RoleRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/language' | '/role'
+  fullPaths: '/' | '/language' | '/patient' | '/role'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/language' | '/role'
-  id: '__root__' | '/' | '/language' | '/role'
+  to: '/' | '/language' | '/patient' | '/role'
+  id: '__root__' | '/' | '/language' | '/patient' | '/role'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   LanguageRoute: typeof LanguageRoute
+  PatientRoute: typeof PatientRoute
   RoleRoute: typeof RoleRoute
 }
 
@@ -75,6 +85,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LanguageRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/patient': {
+      id: '/patient'
+      path: '/patient'
+      fullPath: '/patient'
+      preLoaderRoute: typeof PatientRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/role': {
       id: '/role'
       path: '/role'
@@ -88,6 +105,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   LanguageRoute: LanguageRoute,
+  PatientRoute: PatientRoute,
   RoleRoute: RoleRoute,
 }
 export const routeTree = rootRouteImport
