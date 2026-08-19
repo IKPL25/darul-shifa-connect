@@ -17,6 +17,9 @@ import { Route as MasterAdminRouteImport } from './routes/master-admin'
 import { Route as PatientRouteImport } from './routes/patient'
 import { Route as RoleRouteImport } from './routes/role'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedFindRecordRouteImport } from './routes/_authenticated/find-record'
+import { Route as AuthenticatedPatientRecordsRouteImport } from './routes/_authenticated/patient-records'
+import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedRegisterRouteImport } from './routes/_authenticated/register'
 
 const IndexRoute = IndexRouteImport.update({
@@ -58,6 +61,22 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedFindRecordRoute = AuthenticatedFindRecordRouteImport.update({
+  id: '/find-record',
+  path: '/find-record',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPatientRecordsRoute =
+  AuthenticatedPatientRecordsRouteImport.update({
+    id: '/patient-records',
+    path: '/patient-records',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedProfileRoute = AuthenticatedProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedRegisterRoute = AuthenticatedRegisterRouteImport.update({
   id: '/register',
   path: '/register',
@@ -72,6 +91,9 @@ export interface FileRoutesByFullPath {
   '/patient': typeof PatientRoute
   '/role': typeof RoleRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/find-record': typeof AuthenticatedFindRecordRoute
+  '/patient-records': typeof AuthenticatedPatientRecordsRoute
+  '/profile': typeof AuthenticatedProfileRoute
   '/register': typeof AuthenticatedRegisterRoute
 }
 export interface FileRoutesByTo {
@@ -82,6 +104,9 @@ export interface FileRoutesByTo {
   '/patient': typeof PatientRoute
   '/role': typeof RoleRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/find-record': typeof AuthenticatedFindRecordRoute
+  '/patient-records': typeof AuthenticatedPatientRecordsRoute
+  '/profile': typeof AuthenticatedProfileRoute
   '/register': typeof AuthenticatedRegisterRoute
 }
 export interface FileRoutesById {
@@ -94,6 +119,9 @@ export interface FileRoutesById {
   '/patient': typeof PatientRoute
   '/role': typeof RoleRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/find-record': typeof AuthenticatedFindRecordRoute
+  '/_authenticated/patient-records': typeof AuthenticatedPatientRecordsRoute
+  '/_authenticated/profile': typeof AuthenticatedProfileRoute
   '/_authenticated/register': typeof AuthenticatedRegisterRoute
 }
 export interface FileRouteTypes {
@@ -106,6 +134,9 @@ export interface FileRouteTypes {
     | '/patient'
     | '/role'
     | '/dashboard'
+    | '/find-record'
+    | '/patient-records'
+    | '/profile'
     | '/register'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -116,6 +147,9 @@ export interface FileRouteTypes {
     | '/patient'
     | '/role'
     | '/dashboard'
+    | '/find-record'
+    | '/patient-records'
+    | '/profile'
     | '/register'
   id:
     | '__root__'
@@ -127,6 +161,9 @@ export interface FileRouteTypes {
     | '/patient'
     | '/role'
     | '/_authenticated/dashboard'
+    | '/_authenticated/find-record'
+    | '/_authenticated/patient-records'
+    | '/_authenticated/profile'
     | '/_authenticated/register'
   fileRoutesById: FileRoutesById
 }
@@ -198,6 +235,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/find-record': {
+      id: '/_authenticated/find-record'
+      path: '/find-record'
+      fullPath: '/find-record'
+      preLoaderRoute: typeof AuthenticatedFindRecordRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/patient-records': {
+      id: '/_authenticated/patient-records'
+      path: '/patient-records'
+      fullPath: '/patient-records'
+      preLoaderRoute: typeof AuthenticatedPatientRecordsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/profile': {
+      id: '/_authenticated/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthenticatedProfileRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/register': {
       id: '/_authenticated/register'
       path: '/register'
@@ -210,11 +268,17 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedFindRecordRoute: typeof AuthenticatedFindRecordRoute
+  AuthenticatedPatientRecordsRoute: typeof AuthenticatedPatientRecordsRoute
+  AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedRegisterRoute: typeof AuthenticatedRegisterRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedFindRecordRoute: AuthenticatedFindRecordRoute,
+  AuthenticatedPatientRecordsRoute: AuthenticatedPatientRecordsRoute,
+  AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedRegisterRoute: AuthenticatedRegisterRoute,
 }
 

@@ -40,7 +40,7 @@ function AdminPage() {
       items={[
         { key: "dash", label: t.menu.dashboard, icon: LayoutDashboard },
         { key: "appt", label: t.menu.appointments, icon: CalendarDays },
-        { key: "patients", label: t.menu.patients, icon: Users },
+        { key: "patients", label: t.menu.patients, icon: Users, to: "/patient-records" },
         { key: "doctors", label: t.menu.doctors, icon: Stethoscope },
         { key: "payments", label: t.menu.payments, icon: CreditCard },
         { key: "slips", label: t.menu.slips, icon: ReceiptText },
