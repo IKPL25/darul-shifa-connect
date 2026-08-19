@@ -14,52 +14,82 @@ export type Database = {
   }
   public: {
     Tables: {
+      app_users: {
+        Row: {
+          created_at: string
+          google_email: string
+          id: string
+          last_login_at: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          google_email: string
+          id: string
+          last_login_at?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          google_email?: string
+          id?: string
+          last_login_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       patients: {
         Row: {
-          address: string
+          address: string | null
           age: number
-          cnic: string
+          cnic: string | null
           created_at: string
           full_name: string
           gender: string
           google_email: string
           guardian_name: string
           id: string
+          is_self: boolean
           last_login_at: string
           mobile: string
           mr_number: string | null
+          relation: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
-          address: string
+          address?: string | null
           age: number
-          cnic: string
+          cnic?: string | null
           created_at?: string
           full_name: string
           gender: string
           google_email: string
           guardian_name: string
           id?: string
+          is_self?: boolean
           last_login_at?: string
           mobile: string
           mr_number?: string | null
+          relation?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
-          address?: string
+          address?: string | null
           age?: number
-          cnic?: string
+          cnic?: string | null
           created_at?: string
           full_name?: string
           gender?: string
           google_email?: string
           guardian_name?: string
           id?: string
+          is_self?: boolean
           last_login_at?: string
           mobile?: string
           mr_number?: string | null
+          relation?: string | null
           updated_at?: string
           user_id?: string
         }
