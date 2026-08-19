@@ -5,7 +5,12 @@ import { HospitalLogo } from "./HospitalLogo";
 import { LanguageToggle } from "./LanguageToggle";
 import { useLanguage } from "@/lib/i18n";
 
-export type MenuItem = { key: string; label: string; icon: ComponentType<{ className?: string }> };
+export type MenuItem = {
+  key: string;
+  label: string;
+  icon: ComponentType<{ className?: string }>;
+  to?: string;
+};
 
 export function PortalScreen({ title, items }: { title: string; items: MenuItem[] }) {
   const { t, dir } = useLanguage();
@@ -46,7 +51,9 @@ export function PortalScreen({ title, items }: { title: string; items: MenuItem[
               <button
                 key={item.key}
                 type="button"
-                onClick={() => setActive(isActive ? null : item.key)}
+                onClick={() =>
+                  item.to ? router.navigate({ to: item.to }) : setActive(isActive ? null : item.key)
+                }
                 className={`flex min-h-28 flex-col items-start justify-between rounded-2xl border p-4 text-start transition-colors ${
                   isActive
                     ? "border-destructive bg-destructive/5"
