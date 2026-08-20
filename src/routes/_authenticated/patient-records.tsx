@@ -104,7 +104,7 @@ function PatientRecordsPage() {
                 <article key={p.id} className="rounded-2xl border border-border bg-card p-4">
                   <p className="text-base font-bold text-foreground">{p.full_name}</p>
                   <p className="text-sm text-muted-foreground" dir="ltr">
-                    {p.mobile} · {p.cnic}
+                    {p.mobile} · {p.google_email}
                   </p>
                   <p className="mt-1 text-sm" dir="ltr">
                     <span className="text-muted-foreground">{t.p2.mrNumber}: </span>
