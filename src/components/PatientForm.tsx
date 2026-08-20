@@ -10,25 +10,28 @@ export const emptyPatientForm: PatientFormValues = {
   age: "",
   gender: "",
   mobile: "",
-  cnic: "",
-  address: "",
 };
 
 export function PatientForm({
   initial,
+  initialIsSelf = true,
+  showWhoSelector = false,
   submitLabel,
   pending,
   onSubmit,
   onCancel,
 }: {
   initial: PatientFormValues;
+  initialIsSelf?: boolean;
+  showWhoSelector?: boolean;
   submitLabel: string;
   pending: boolean;
-  onSubmit: (values: PatientFormValues) => void;
+  onSubmit: (values: PatientFormValues, isSelf: boolean) => void;
   onCancel?: () => void;
 }) {
   const { t } = useLanguage();
   const [values, setValues] = useState<PatientFormValues>(initial);
+  const [isSelf, setIsSelf] = useState(initialIsSelf);
   const [errors, setErrors] = useState<Partial<Record<ProfileField, string>>>({});
 
   const set = (field: ProfileField, value: string) =>
@@ -36,12 +39,10 @@ export function PatientForm({
 
   const labels: Record<ProfileField, string> = {
     full_name: t.p2.fullName,
-    guardian_name: t.p2.guardianName,
+    guardian_name: t.p2.relation,
     age: t.p2.age,
     gender: t.p2.gender,
     mobile: t.p2.mobile,
-    cnic: t.p2.cnic,
-    address: t.p2.address,
   };
 
   const errText = (field: ProfileField) => {
@@ -62,10 +63,35 @@ export function PatientForm({
         e.preventDefault();
         const found = validateProfile(values);
         setErrors(found);
-        if (Object.keys(found).length === 0) onSubmit(values);
+        if (Object.keys(found).length === 0) onSubmit(values, isSelf);
       }}
       className="space-y-4"
     >
+      {showWhoSelector && (
+        <div>
+          <span className="mb-2 block text-sm font-semibold text-foreground">{t.p2.appointmentFor}</span>
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              { key: true, label: t.p2.self },
+              { key: false, label: t.p2.otherPatient },
+            ].map((option) => (
+              <button
+                key={String(option.key)}
+                type="button"
+                onClick={() => setIsSelf(option.key)}
+                className={`min-h-12 rounded-xl border-2 px-4 font-semibold ${
+                  isSelf === option.key
+                    ? "border-primary bg-primary/10 text-primary"
+                    : "border-border bg-card text-foreground"
+                }`}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       {(["full_name", "guardian_name"] as ProfileField[]).map((field) => (
         <div key={field}>
           <label className="mb-1 block text-sm font-semibold text-foreground">{labels[field]}</label>
@@ -118,30 +144,6 @@ export function PatientForm({
           onChange={(e) => set("mobile", e.target.value)}
         />
         {errText("mobile") && <p className="mt-1 text-xs font-medium text-destructive">{errText("mobile")}</p>}
-      </div>
-
-      <div>
-        <label className="mb-1 block text-sm font-semibold text-foreground">{labels.cnic}</label>
-        <input
-          inputMode="numeric"
-          dir="ltr"
-          placeholder="42101-1234567-1"
-          className={inputClass("cnic")}
-          value={values.cnic}
-          onChange={(e) => set("cnic", e.target.value)}
-        />
-        {errText("cnic") && <p className="mt-1 text-xs font-medium text-destructive">{errText("cnic")}</p>}
-      </div>
-
-      <div>
-        <label className="mb-1 block text-sm font-semibold text-foreground">{labels.address}</label>
-        <textarea
-          rows={3}
-          className={inputClass("address")}
-          value={values.address}
-          onChange={(e) => set("address", e.target.value)}
-        />
-        {errText("address") && <p className="mt-1 text-xs font-medium text-destructive">{errText("address")}</p>}
       </div>
 
       <div className="flex gap-3 pt-2">
