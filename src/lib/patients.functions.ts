@@ -4,25 +4,103 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { patientProfileSchema, mrRegex } from "@/lib/patient-schema";
 
 const PATIENT_COLUMNS =
-  "id, google_email, full_name, guardian_name, age, gender, mobile, cnic, address, mr_number, created_at, updated_at, last_login_at";
+  "id, user_id, full_name, guardian_name, age, gender, mobile, mr_number, is_self, relation, created_at, updated_at";
 
-/** Current user's patient record (null when they have not registered yet). */
-export const getMyPatient = createServerFn({ method: "GET" })
+/** The signed-in Google account (booking user). Created/refreshed on each visit. */
+export const getMyAccount = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const email = (context.claims as { email?: string })?.email ?? "";
+    const now = new Date().toISOString();
+    const { data } = await context.supabase
+      .from("app_users")
+      .select("id, google_email, created_at, last_login_at")
+      .eq("id", context.userId)
+      .maybeSingle();
+
+    if (!data) {
+      const { data: created } = await context.supabase
+        .from("app_users")
+        .insert({ id: context.userId, google_email: email })
+        .select("id, google_email, created_at, last_login_at")
+        .maybeSingle();
+      return { account: created ?? { id: context.userId, google_email: email, created_at: now, last_login_at: now } };
+    }
+    await context.supabase.from("app_users").update({ last_login_at: now }).eq("id", context.userId);
+    return { account: data };
+  });
+
+/** All patient records this Google account has created (self + family members). */
+export const listMyPatients = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { data, error } = await context.supabase
       .from("patients")
       .select(PATIENT_COLUMNS)
       .eq("user_id", context.userId)
-      .maybeSingle();
+      .order("is_self", { ascending: false })
+      .order("created_at", { ascending: true });
     if (error) throw new Error("PROFILE_LOAD_FAILED");
-    if (data) {
-      await context.supabase
+    return { patients: data ?? [] };
+  });
+
+const savePatientInput = z.object({
+  id: z.string().uuid().optional(),
+  is_self: z.boolean().default(false),
+  relation: z.string().trim().max(20).optional(),
+  ...patientProfileSchema.shape,
+});
+
+/** Create or update a patient record owned by this Google account. MR number is never accepted here. */
+export const savePatient = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) => savePatientInput.parse(input))
+  .handler(async ({ data, context }) => {
+    const email = (context.claims as { email?: string })?.email ?? "";
+    const { id, ...fields } = data;
+
+    if (id) {
+      const { error } = await context.supabase
         .from("patients")
-        .update({ last_login_at: new Date().toISOString() })
+        .update({ ...fields, updated_at: new Date().toISOString() })
+        .eq("id", id)
         .eq("user_id", context.userId);
+      if (error) throw new Error("PROFILE_SAVE_FAILED");
+      return { ok: true, id };
     }
-    return { patient: data ?? null };
+
+    // Identify an existing patient of this account by mobile to avoid duplicates.
+    const { data: existing } = await context.supabase
+      .from("patients")
+      .select("id")
+      .eq("user_id", context.userId)
+      .eq("mobile", fields.mobile)
+      .eq("full_name", fields.full_name)
+      .maybeSingle();
+    if (existing) return { ok: true, id: existing.id, matchedExisting: true };
+
+    const { data: inserted, error } = await context.supabase
+      .from("patients")
+      .insert({ ...fields, user_id: context.userId, google_email: email })
+      .select("id")
+      .maybeSingle();
+    if (error) throw new Error("PROFILE_SAVE_FAILED");
+    return { ok: true, id: inserted?.id ?? null };
+  });
+
+/** Remove one of my patient records (only before an MR number is issued). */
+export const deleteMyPatient = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) => z.object({ id: z.string().uuid() }).parse(input))
+  .handler(async ({ data, context }) => {
+    const { error } = await context.supabase
+      .from("patients")
+      .delete()
+      .eq("id", data.id)
+      .eq("user_id", context.userId)
+      .is("mr_number", null);
+    if (error) throw new Error("DELETE_FAILED");
+    return { ok: true };
   });
 
 export const getMyRole = createServerFn({ method: "GET" })
@@ -39,52 +117,24 @@ export const getMyRole = createServerFn({ method: "GET" })
     };
   });
 
-/** Create or update the signed-in patient's own profile. MR number is never accepted here. */
-export const saveMyProfile = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => patientProfileSchema.parse(input))
-  .handler(async ({ data, context }) => {
-    const email = (context.claims as { email?: string })?.email ?? "";
-    const { data: existing } = await context.supabase
-      .from("patients")
-      .select("id")
-      .eq("user_id", context.userId)
-      .maybeSingle();
-
-    if (existing) {
-      const { error } = await context.supabase
-        .from("patients")
-        .update({ ...data, updated_at: new Date().toISOString() })
-        .eq("user_id", context.userId);
-      if (error) throw new Error("PROFILE_SAVE_FAILED");
-    } else {
-      const { error } = await context.supabase.from("patients").insert({
-        ...data,
-        user_id: context.userId,
-        google_email: email,
-      });
-      if (error) throw new Error("PROFILE_SAVE_FAILED");
-    }
-    return { ok: true };
-  });
-
-/** Look up the signed-in patient's own hospital record by mobile or MR number. */
+/** Find a hospital record among the patients this account owns, by mobile or MR number. */
 export const findMyRecord = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: unknown) => z.object({ term: z.string().trim().min(3).max(30) }).parse(input))
   .handler(async ({ data, context }) => {
-    const { data: row, error } = await context.supabase
+    const { data: rows, error } = await context.supabase
       .from("patients")
       .select(PATIENT_COLUMNS)
-      .eq("user_id", context.userId)
-      .maybeSingle();
+      .eq("user_id", context.userId);
     if (error) throw new Error("SEARCH_FAILED");
     const term = data.term.replace(/-/g, "").toLowerCase();
-    const matches =
-      row &&
-      ((row.mobile ?? "").replace(/-/g, "").toLowerCase() === term ||
-        (row.mr_number ?? "").replace(/-/g, "").toLowerCase() === term);
-    return { patient: matches ? row : null };
+    const match =
+      (rows ?? []).find(
+        (row) =>
+          (row.mobile ?? "").replace(/-/g, "").toLowerCase() === term ||
+          (row.mr_number ?? "").replace(/-/g, "").toLowerCase() === term,
+      ) ?? null;
+    return { patient: match };
   });
 
 async function assertStaff(context: { supabase: { rpc: Function }; userId: string }) {
@@ -98,7 +148,11 @@ export const staffSearchPatients = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => z.object({ term: z.string().trim().max(60) }).parse(input))
   .handler(async ({ data, context }) => {
     await assertStaff(context as never);
-    let query = context.supabase.from("patients").select(PATIENT_COLUMNS).order("created_at", { ascending: false }).limit(50);
+    let query = context.supabase
+      .from("patients")
+      .select(`${PATIENT_COLUMNS}, google_email`)
+      .order("created_at", { ascending: false })
+      .limit(50);
     if (data.term) {
       const term = data.term.replace(/[%,]/g, "");
       query = query.or(`mr_number.ilike.%${term}%,mobile.ilike.%${term}%,full_name.ilike.%${term}%`);
