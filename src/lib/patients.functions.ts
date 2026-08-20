@@ -47,7 +47,7 @@ export const listMyPatients = createServerFn({ method: "GET" })
 const savePatientInput = z.object({
   id: z.string().uuid().optional(),
   is_self: z.boolean().default(false),
-  relation: z.string().trim().max(20).optional(),
+  relation: z.string().trim().max(20).nullish().transform((v) => v ?? null),
   ...patientProfileSchema.shape,
 });
 
