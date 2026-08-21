@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_permissions: {
+        Row: {
+          created_at: string
+          id: string
+          permission: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          permission: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          permission?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       app_users: {
         Row: {
           created_at: string
@@ -37,6 +58,146 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      appointments: {
+        Row: {
+          age: number
+          appointment_date: string
+          appointment_number: string
+          booking_email: string
+          booking_user_id: string
+          created_at: string
+          doctor_id: string
+          doctor_name: string
+          fee: number
+          gender: string
+          guardian_name: string
+          id: string
+          mobile: string
+          mr_number: string | null
+          opd_timing: string
+          patient_id: string
+          patient_name: string
+          payment_status: string
+          qualification: string
+          specialty_name: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          age: number
+          appointment_date: string
+          appointment_number: string
+          booking_email?: string
+          booking_user_id: string
+          created_at?: string
+          doctor_id: string
+          doctor_name: string
+          fee?: number
+          gender: string
+          guardian_name: string
+          id?: string
+          mobile: string
+          mr_number?: string | null
+          opd_timing?: string
+          patient_id: string
+          patient_name: string
+          payment_status?: string
+          qualification?: string
+          specialty_name: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          age?: number
+          appointment_date?: string
+          appointment_number?: string
+          booking_email?: string
+          booking_user_id?: string
+          created_at?: string
+          doctor_id?: string
+          doctor_name?: string
+          fee?: number
+          gender?: string
+          guardian_name?: string
+          id?: string
+          mobile?: string
+          mr_number?: string | null
+          opd_timing?: string
+          patient_id?: string
+          patient_name?: string
+          payment_status?: string
+          qualification?: string
+          specialty_name?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "appointments_doctor_id_fkey"
+            columns: ["doctor_id"]
+            isOneToOne: false
+            referencedRelation: "doctors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "appointments_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      doctors: {
+        Row: {
+          created_at: string
+          days: number[]
+          fee: number
+          id: string
+          is_active: boolean
+          name: string
+          opd_timing: string
+          qualification: string
+          specialty_id: string | null
+          specialty_name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          days?: number[]
+          fee?: number
+          id?: string
+          is_active?: boolean
+          name: string
+          opd_timing?: string
+          qualification?: string
+          specialty_id?: string | null
+          specialty_name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          days?: number[]
+          fee?: number
+          id?: string
+          is_active?: boolean
+          name?: string
+          opd_timing?: string
+          qualification?: string
+          specialty_id?: string | null
+          specialty_name?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "doctors_specialty_id_fkey"
+            columns: ["specialty_id"]
+            isOneToOne: false
+            referencedRelation: "specialties"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       patients: {
         Row: {
@@ -95,6 +256,33 @@ export type Database = {
         }
         Relationships: []
       }
+      specialties: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          name: string
+          name_ur: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          name_ur?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          name_ur?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -121,6 +309,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      has_permission: {
+        Args: { _permission: string; _user_id: string }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -129,6 +321,7 @@ export type Database = {
         Returns: boolean
       }
       is_staff: { Args: { _user_id: string }; Returns: boolean }
+      next_appointment_number: { Args: { _date: string }; Returns: string }
     }
     Enums: {
       app_role: "admin" | "master_admin"
