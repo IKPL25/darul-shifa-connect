@@ -8,11 +8,13 @@ import {
   type ReactNode,
 } from "react";
 
+import { p3 } from "./strings-p3";
+
 export type Lang = "en" | "ur";
 
 const STORAGE_KEY = "dsgh.lang";
 
-export const strings = {
+const baseStrings = {
   en: {
     hospital: "Darul Shifa General Hospital",
     portal: "Appointment Portal",
@@ -235,6 +237,11 @@ export const strings = {
       },
     },
   },
+};
+
+export const strings = {
+  en: { ...baseStrings.en, p3: p3.en },
+  ur: { ...baseStrings.ur, p3: p3.ur },
 };
 
 export type Strings = (typeof strings)["en"];
