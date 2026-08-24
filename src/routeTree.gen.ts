@@ -16,6 +16,7 @@ import { Route as LanguageRouteImport } from './routes/language'
 import { Route as MasterAdminRouteImport } from './routes/master-admin'
 import { Route as PatientRouteImport } from './routes/patient'
 import { Route as RoleRouteImport } from './routes/role'
+import { Route as AuthenticatedAppointmentStatusRouteImport } from './routes/_authenticated/appointment-status'
 import { Route as AuthenticatedAppointmentsRouteImport } from './routes/_authenticated/appointments'
 import { Route as AuthenticatedBookRouteImport } from './routes/_authenticated/book'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
@@ -59,6 +60,12 @@ const RoleRoute = RoleRouteImport.update({
   path: '/role',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAppointmentStatusRoute =
+  AuthenticatedAppointmentStatusRouteImport.update({
+    id: '/appointment-status',
+    path: '/appointment-status',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAppointmentsRoute =
   AuthenticatedAppointmentsRouteImport.update({
     id: '/appointments',
@@ -109,6 +116,7 @@ export interface FileRoutesByFullPath {
   '/master-admin': typeof MasterAdminRoute
   '/patient': typeof PatientRoute
   '/role': typeof RoleRoute
+  '/appointment-status': typeof AuthenticatedAppointmentStatusRoute
   '/appointments': typeof AuthenticatedAppointmentsRoute
   '/book': typeof AuthenticatedBookRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -125,6 +133,7 @@ export interface FileRoutesByTo {
   '/master-admin': typeof MasterAdminRoute
   '/patient': typeof PatientRoute
   '/role': typeof RoleRoute
+  '/appointment-status': typeof AuthenticatedAppointmentStatusRoute
   '/appointments': typeof AuthenticatedAppointmentsRoute
   '/book': typeof AuthenticatedBookRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -143,6 +152,7 @@ export interface FileRoutesById {
   '/master-admin': typeof MasterAdminRoute
   '/patient': typeof PatientRoute
   '/role': typeof RoleRoute
+  '/_authenticated/appointment-status': typeof AuthenticatedAppointmentStatusRoute
   '/_authenticated/appointments': typeof AuthenticatedAppointmentsRoute
   '/_authenticated/book': typeof AuthenticatedBookRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
@@ -161,6 +171,7 @@ export interface FileRouteTypes {
     | '/master-admin'
     | '/patient'
     | '/role'
+    | '/appointment-status'
     | '/appointments'
     | '/book'
     | '/dashboard'
@@ -177,6 +188,7 @@ export interface FileRouteTypes {
     | '/master-admin'
     | '/patient'
     | '/role'
+    | '/appointment-status'
     | '/appointments'
     | '/book'
     | '/dashboard'
@@ -194,6 +206,7 @@ export interface FileRouteTypes {
     | '/master-admin'
     | '/patient'
     | '/role'
+    | '/_authenticated/appointment-status'
     | '/_authenticated/appointments'
     | '/_authenticated/book'
     | '/_authenticated/dashboard'
@@ -265,6 +278,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RoleRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/appointment-status': {
+      id: '/_authenticated/appointment-status'
+      path: '/appointment-status'
+      fullPath: '/appointment-status'
+      preLoaderRoute: typeof AuthenticatedAppointmentStatusRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/appointments': {
       id: '/_authenticated/appointments'
       path: '/appointments'
@@ -325,6 +345,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAppointmentStatusRoute: typeof AuthenticatedAppointmentStatusRoute
   AuthenticatedAppointmentsRoute: typeof AuthenticatedAppointmentsRoute
   AuthenticatedBookRoute: typeof AuthenticatedBookRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
@@ -336,6 +357,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAppointmentStatusRoute: AuthenticatedAppointmentStatusRoute,
   AuthenticatedAppointmentsRoute: AuthenticatedAppointmentsRoute,
   AuthenticatedBookRoute: AuthenticatedBookRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
