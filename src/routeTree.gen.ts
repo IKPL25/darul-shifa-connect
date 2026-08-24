@@ -17,6 +17,7 @@ import { Route as MasterAdminRouteImport } from './routes/master-admin'
 import { Route as PatientRouteImport } from './routes/patient'
 import { Route as RoleRouteImport } from './routes/role'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedDoctorsRouteImport } from './routes/_authenticated/doctors'
 import { Route as AuthenticatedFindRecordRouteImport } from './routes/_authenticated/find-record'
 import { Route as AuthenticatedPatientRecordsRouteImport } from './routes/_authenticated/patient-records'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
@@ -61,6 +62,11 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedDoctorsRoute = AuthenticatedDoctorsRouteImport.update({
+  id: '/doctors',
+  path: '/doctors',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedFindRecordRoute = AuthenticatedFindRecordRouteImport.update({
   id: '/find-record',
   path: '/find-record',
@@ -91,6 +97,7 @@ export interface FileRoutesByFullPath {
   '/patient': typeof PatientRoute
   '/role': typeof RoleRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/doctors': typeof AuthenticatedDoctorsRoute
   '/find-record': typeof AuthenticatedFindRecordRoute
   '/patient-records': typeof AuthenticatedPatientRecordsRoute
   '/profile': typeof AuthenticatedProfileRoute
@@ -104,6 +111,7 @@ export interface FileRoutesByTo {
   '/patient': typeof PatientRoute
   '/role': typeof RoleRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/doctors': typeof AuthenticatedDoctorsRoute
   '/find-record': typeof AuthenticatedFindRecordRoute
   '/patient-records': typeof AuthenticatedPatientRecordsRoute
   '/profile': typeof AuthenticatedProfileRoute
@@ -119,6 +127,7 @@ export interface FileRoutesById {
   '/patient': typeof PatientRoute
   '/role': typeof RoleRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/doctors': typeof AuthenticatedDoctorsRoute
   '/_authenticated/find-record': typeof AuthenticatedFindRecordRoute
   '/_authenticated/patient-records': typeof AuthenticatedPatientRecordsRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
@@ -134,6 +143,7 @@ export interface FileRouteTypes {
     | '/patient'
     | '/role'
     | '/dashboard'
+    | '/doctors'
     | '/find-record'
     | '/patient-records'
     | '/profile'
@@ -147,6 +157,7 @@ export interface FileRouteTypes {
     | '/patient'
     | '/role'
     | '/dashboard'
+    | '/doctors'
     | '/find-record'
     | '/patient-records'
     | '/profile'
@@ -161,6 +172,7 @@ export interface FileRouteTypes {
     | '/patient'
     | '/role'
     | '/_authenticated/dashboard'
+    | '/_authenticated/doctors'
     | '/_authenticated/find-record'
     | '/_authenticated/patient-records'
     | '/_authenticated/profile'
@@ -235,6 +247,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/doctors': {
+      id: '/_authenticated/doctors'
+      path: '/doctors'
+      fullPath: '/doctors'
+      preLoaderRoute: typeof AuthenticatedDoctorsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/find-record': {
       id: '/_authenticated/find-record'
       path: '/find-record'
@@ -268,6 +287,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedDoctorsRoute: typeof AuthenticatedDoctorsRoute
   AuthenticatedFindRecordRoute: typeof AuthenticatedFindRecordRoute
   AuthenticatedPatientRecordsRoute: typeof AuthenticatedPatientRecordsRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
@@ -276,6 +296,7 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedDoctorsRoute: AuthenticatedDoctorsRoute,
   AuthenticatedFindRecordRoute: AuthenticatedFindRecordRoute,
   AuthenticatedPatientRecordsRoute: AuthenticatedPatientRecordsRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
