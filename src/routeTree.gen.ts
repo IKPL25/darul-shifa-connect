@@ -16,6 +16,7 @@ import { Route as LanguageRouteImport } from './routes/language'
 import { Route as MasterAdminRouteImport } from './routes/master-admin'
 import { Route as PatientRouteImport } from './routes/patient'
 import { Route as RoleRouteImport } from './routes/role'
+import { Route as AuthenticatedBookRouteImport } from './routes/_authenticated/book'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDoctorsRouteImport } from './routes/_authenticated/doctors'
 import { Route as AuthenticatedFindRecordRouteImport } from './routes/_authenticated/find-record'
@@ -57,6 +58,11 @@ const RoleRoute = RoleRouteImport.update({
   path: '/role',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedBookRoute = AuthenticatedBookRouteImport.update({
+  id: '/book',
+  path: '/book',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -96,6 +102,7 @@ export interface FileRoutesByFullPath {
   '/master-admin': typeof MasterAdminRoute
   '/patient': typeof PatientRoute
   '/role': typeof RoleRoute
+  '/book': typeof AuthenticatedBookRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/doctors': typeof AuthenticatedDoctorsRoute
   '/find-record': typeof AuthenticatedFindRecordRoute
@@ -110,6 +117,7 @@ export interface FileRoutesByTo {
   '/master-admin': typeof MasterAdminRoute
   '/patient': typeof PatientRoute
   '/role': typeof RoleRoute
+  '/book': typeof AuthenticatedBookRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/doctors': typeof AuthenticatedDoctorsRoute
   '/find-record': typeof AuthenticatedFindRecordRoute
@@ -126,6 +134,7 @@ export interface FileRoutesById {
   '/master-admin': typeof MasterAdminRoute
   '/patient': typeof PatientRoute
   '/role': typeof RoleRoute
+  '/_authenticated/book': typeof AuthenticatedBookRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/doctors': typeof AuthenticatedDoctorsRoute
   '/_authenticated/find-record': typeof AuthenticatedFindRecordRoute
@@ -142,6 +151,7 @@ export interface FileRouteTypes {
     | '/master-admin'
     | '/patient'
     | '/role'
+    | '/book'
     | '/dashboard'
     | '/doctors'
     | '/find-record'
@@ -156,6 +166,7 @@ export interface FileRouteTypes {
     | '/master-admin'
     | '/patient'
     | '/role'
+    | '/book'
     | '/dashboard'
     | '/doctors'
     | '/find-record'
@@ -171,6 +182,7 @@ export interface FileRouteTypes {
     | '/master-admin'
     | '/patient'
     | '/role'
+    | '/_authenticated/book'
     | '/_authenticated/dashboard'
     | '/_authenticated/doctors'
     | '/_authenticated/find-record'
@@ -240,6 +252,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RoleRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/book': {
+      id: '/_authenticated/book'
+      path: '/book'
+      fullPath: '/book'
+      preLoaderRoute: typeof AuthenticatedBookRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -286,6 +305,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedBookRoute: typeof AuthenticatedBookRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedDoctorsRoute: typeof AuthenticatedDoctorsRoute
   AuthenticatedFindRecordRoute: typeof AuthenticatedFindRecordRoute
@@ -295,6 +315,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedBookRoute: AuthenticatedBookRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedDoctorsRoute: AuthenticatedDoctorsRoute,
   AuthenticatedFindRecordRoute: AuthenticatedFindRecordRoute,
