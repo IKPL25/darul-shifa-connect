@@ -16,7 +16,11 @@ import { Route as LanguageRouteImport } from './routes/language'
 import { Route as MasterAdminRouteImport } from './routes/master-admin'
 import { Route as PatientRouteImport } from './routes/patient'
 import { Route as RoleRouteImport } from './routes/role'
+import { Route as AuthenticatedAppointmentStatusRouteImport } from './routes/_authenticated/appointment-status'
+import { Route as AuthenticatedAppointmentsRouteImport } from './routes/_authenticated/appointments'
+import { Route as AuthenticatedBookRouteImport } from './routes/_authenticated/book'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedDoctorsRouteImport } from './routes/_authenticated/doctors'
 import { Route as AuthenticatedFindRecordRouteImport } from './routes/_authenticated/find-record'
 import { Route as AuthenticatedPatientRecordsRouteImport } from './routes/_authenticated/patient-records'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
@@ -56,9 +60,31 @@ const RoleRoute = RoleRouteImport.update({
   path: '/role',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAppointmentStatusRoute =
+  AuthenticatedAppointmentStatusRouteImport.update({
+    id: '/appointment-status',
+    path: '/appointment-status',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAppointmentsRoute =
+  AuthenticatedAppointmentsRouteImport.update({
+    id: '/appointments',
+    path: '/appointments',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedBookRoute = AuthenticatedBookRouteImport.update({
+  id: '/book',
+  path: '/book',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedDoctorsRoute = AuthenticatedDoctorsRouteImport.update({
+  id: '/doctors',
+  path: '/doctors',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedFindRecordRoute = AuthenticatedFindRecordRouteImport.update({
@@ -90,7 +116,11 @@ export interface FileRoutesByFullPath {
   '/master-admin': typeof MasterAdminRoute
   '/patient': typeof PatientRoute
   '/role': typeof RoleRoute
+  '/appointment-status': typeof AuthenticatedAppointmentStatusRoute
+  '/appointments': typeof AuthenticatedAppointmentsRoute
+  '/book': typeof AuthenticatedBookRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/doctors': typeof AuthenticatedDoctorsRoute
   '/find-record': typeof AuthenticatedFindRecordRoute
   '/patient-records': typeof AuthenticatedPatientRecordsRoute
   '/profile': typeof AuthenticatedProfileRoute
@@ -103,7 +133,11 @@ export interface FileRoutesByTo {
   '/master-admin': typeof MasterAdminRoute
   '/patient': typeof PatientRoute
   '/role': typeof RoleRoute
+  '/appointment-status': typeof AuthenticatedAppointmentStatusRoute
+  '/appointments': typeof AuthenticatedAppointmentsRoute
+  '/book': typeof AuthenticatedBookRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/doctors': typeof AuthenticatedDoctorsRoute
   '/find-record': typeof AuthenticatedFindRecordRoute
   '/patient-records': typeof AuthenticatedPatientRecordsRoute
   '/profile': typeof AuthenticatedProfileRoute
@@ -118,7 +152,11 @@ export interface FileRoutesById {
   '/master-admin': typeof MasterAdminRoute
   '/patient': typeof PatientRoute
   '/role': typeof RoleRoute
+  '/_authenticated/appointment-status': typeof AuthenticatedAppointmentStatusRoute
+  '/_authenticated/appointments': typeof AuthenticatedAppointmentsRoute
+  '/_authenticated/book': typeof AuthenticatedBookRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/doctors': typeof AuthenticatedDoctorsRoute
   '/_authenticated/find-record': typeof AuthenticatedFindRecordRoute
   '/_authenticated/patient-records': typeof AuthenticatedPatientRecordsRoute
   '/_authenticated/profile': typeof AuthenticatedProfileRoute
@@ -133,7 +171,11 @@ export interface FileRouteTypes {
     | '/master-admin'
     | '/patient'
     | '/role'
+    | '/appointment-status'
+    | '/appointments'
+    | '/book'
     | '/dashboard'
+    | '/doctors'
     | '/find-record'
     | '/patient-records'
     | '/profile'
@@ -146,7 +188,11 @@ export interface FileRouteTypes {
     | '/master-admin'
     | '/patient'
     | '/role'
+    | '/appointment-status'
+    | '/appointments'
+    | '/book'
     | '/dashboard'
+    | '/doctors'
     | '/find-record'
     | '/patient-records'
     | '/profile'
@@ -160,7 +206,11 @@ export interface FileRouteTypes {
     | '/master-admin'
     | '/patient'
     | '/role'
+    | '/_authenticated/appointment-status'
+    | '/_authenticated/appointments'
+    | '/_authenticated/book'
     | '/_authenticated/dashboard'
+    | '/_authenticated/doctors'
     | '/_authenticated/find-record'
     | '/_authenticated/patient-records'
     | '/_authenticated/profile'
@@ -228,11 +278,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RoleRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/appointment-status': {
+      id: '/_authenticated/appointment-status'
+      path: '/appointment-status'
+      fullPath: '/appointment-status'
+      preLoaderRoute: typeof AuthenticatedAppointmentStatusRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/appointments': {
+      id: '/_authenticated/appointments'
+      path: '/appointments'
+      fullPath: '/appointments'
+      preLoaderRoute: typeof AuthenticatedAppointmentsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/book': {
+      id: '/_authenticated/book'
+      path: '/book'
+      fullPath: '/book'
+      preLoaderRoute: typeof AuthenticatedBookRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/doctors': {
+      id: '/_authenticated/doctors'
+      path: '/doctors'
+      fullPath: '/doctors'
+      preLoaderRoute: typeof AuthenticatedDoctorsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/find-record': {
@@ -267,7 +345,11 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAppointmentStatusRoute: typeof AuthenticatedAppointmentStatusRoute
+  AuthenticatedAppointmentsRoute: typeof AuthenticatedAppointmentsRoute
+  AuthenticatedBookRoute: typeof AuthenticatedBookRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedDoctorsRoute: typeof AuthenticatedDoctorsRoute
   AuthenticatedFindRecordRoute: typeof AuthenticatedFindRecordRoute
   AuthenticatedPatientRecordsRoute: typeof AuthenticatedPatientRecordsRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
@@ -275,7 +357,11 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAppointmentStatusRoute: AuthenticatedAppointmentStatusRoute,
+  AuthenticatedAppointmentsRoute: AuthenticatedAppointmentsRoute,
+  AuthenticatedBookRoute: AuthenticatedBookRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedDoctorsRoute: AuthenticatedDoctorsRoute,
   AuthenticatedFindRecordRoute: AuthenticatedFindRecordRoute,
   AuthenticatedPatientRecordsRoute: AuthenticatedPatientRecordsRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
