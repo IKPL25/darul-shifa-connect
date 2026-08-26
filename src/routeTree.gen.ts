@@ -16,6 +16,7 @@ import { Route as LanguageRouteImport } from './routes/language'
 import { Route as MasterAdminRouteImport } from './routes/master-admin'
 import { Route as PatientRouteImport } from './routes/patient'
 import { Route as RoleRouteImport } from './routes/role'
+import { Route as AuthenticatedAdminAppointmentsRouteImport } from './routes/_authenticated/admin-appointments'
 import { Route as AuthenticatedAppointmentStatusRouteImport } from './routes/_authenticated/appointment-status'
 import { Route as AuthenticatedAppointmentsRouteImport } from './routes/_authenticated/appointments'
 import { Route as AuthenticatedBookRouteImport } from './routes/_authenticated/book'
@@ -60,6 +61,12 @@ const RoleRoute = RoleRouteImport.update({
   path: '/role',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminAppointmentsRoute =
+  AuthenticatedAdminAppointmentsRouteImport.update({
+    id: '/admin-appointments',
+    path: '/admin-appointments',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAppointmentStatusRoute =
   AuthenticatedAppointmentStatusRouteImport.update({
     id: '/appointment-status',
@@ -116,6 +123,7 @@ export interface FileRoutesByFullPath {
   '/master-admin': typeof MasterAdminRoute
   '/patient': typeof PatientRoute
   '/role': typeof RoleRoute
+  '/admin-appointments': typeof AuthenticatedAdminAppointmentsRoute
   '/appointment-status': typeof AuthenticatedAppointmentStatusRoute
   '/appointments': typeof AuthenticatedAppointmentsRoute
   '/book': typeof AuthenticatedBookRoute
@@ -133,6 +141,7 @@ export interface FileRoutesByTo {
   '/master-admin': typeof MasterAdminRoute
   '/patient': typeof PatientRoute
   '/role': typeof RoleRoute
+  '/admin-appointments': typeof AuthenticatedAdminAppointmentsRoute
   '/appointment-status': typeof AuthenticatedAppointmentStatusRoute
   '/appointments': typeof AuthenticatedAppointmentsRoute
   '/book': typeof AuthenticatedBookRoute
@@ -152,6 +161,7 @@ export interface FileRoutesById {
   '/master-admin': typeof MasterAdminRoute
   '/patient': typeof PatientRoute
   '/role': typeof RoleRoute
+  '/_authenticated/admin-appointments': typeof AuthenticatedAdminAppointmentsRoute
   '/_authenticated/appointment-status': typeof AuthenticatedAppointmentStatusRoute
   '/_authenticated/appointments': typeof AuthenticatedAppointmentsRoute
   '/_authenticated/book': typeof AuthenticatedBookRoute
@@ -171,6 +181,7 @@ export interface FileRouteTypes {
     | '/master-admin'
     | '/patient'
     | '/role'
+    | '/admin-appointments'
     | '/appointment-status'
     | '/appointments'
     | '/book'
@@ -188,6 +199,7 @@ export interface FileRouteTypes {
     | '/master-admin'
     | '/patient'
     | '/role'
+    | '/admin-appointments'
     | '/appointment-status'
     | '/appointments'
     | '/book'
@@ -206,6 +218,7 @@ export interface FileRouteTypes {
     | '/master-admin'
     | '/patient'
     | '/role'
+    | '/_authenticated/admin-appointments'
     | '/_authenticated/appointment-status'
     | '/_authenticated/appointments'
     | '/_authenticated/book'
@@ -278,6 +291,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RoleRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin-appointments': {
+      id: '/_authenticated/admin-appointments'
+      path: '/admin-appointments'
+      fullPath: '/admin-appointments'
+      preLoaderRoute: typeof AuthenticatedAdminAppointmentsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/appointment-status': {
       id: '/_authenticated/appointment-status'
       path: '/appointment-status'
@@ -345,6 +365,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminAppointmentsRoute: typeof AuthenticatedAdminAppointmentsRoute
   AuthenticatedAppointmentStatusRoute: typeof AuthenticatedAppointmentStatusRoute
   AuthenticatedAppointmentsRoute: typeof AuthenticatedAppointmentsRoute
   AuthenticatedBookRoute: typeof AuthenticatedBookRoute
@@ -357,6 +378,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminAppointmentsRoute: AuthenticatedAdminAppointmentsRoute,
   AuthenticatedAppointmentStatusRoute: AuthenticatedAppointmentStatusRoute,
   AuthenticatedAppointmentsRoute: AuthenticatedAppointmentsRoute,
   AuthenticatedBookRoute: AuthenticatedBookRoute,

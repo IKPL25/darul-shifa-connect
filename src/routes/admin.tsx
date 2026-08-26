@@ -39,9 +39,9 @@ function AdminPage() {
       title={t.adminTitle}
       items={[
         { key: "dash", label: t.menu.dashboard, icon: LayoutDashboard },
-        { key: "appt", label: t.menu.appointments, icon: CalendarDays },
+        { key: "appt", label: t.menu.appointments, icon: CalendarDays, to: "/admin-appointments" },
         { key: "patients", label: t.menu.patients, icon: Users, to: "/patient-records" },
-        { key: "doctors", label: t.menu.doctors, icon: Stethoscope },
+        { key: "doctors", label: t.menu.doctors, icon: Stethoscope, to: "/doctors" },
         { key: "payments", label: t.menu.payments, icon: CreditCard },
         { key: "slips", label: t.menu.slips, icon: ReceiptText },
         { key: "reports", label: t.menu.reports, icon: BarChart3 },
