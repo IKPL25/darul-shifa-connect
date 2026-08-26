@@ -45,9 +45,9 @@ function DashboardPage() {
   }, [isLoading, data, patients.length, router]);
 
   const tiles = [
-    { key: "book", label: t.menu.bookAppointment, icon: CalendarPlus, to: null },
-    { key: "mine", label: t.menu.myAppointments, icon: CalendarDays, to: null },
-    { key: "status", label: t.menu.appointmentStatus, icon: Activity, to: null },
+    { key: "book", label: t.menu.bookAppointment, icon: CalendarPlus, to: "/book" },
+    { key: "mine", label: t.menu.myAppointments, icon: CalendarDays, to: "/appointments" },
+    { key: "status", label: t.menu.appointmentStatus, icon: Activity, to: "/appointment-status" },
     { key: "slips", label: t.menu.mySlips, icon: ReceiptText, to: null },
     { key: "profile", label: t.p2.myPatients, icon: Users, to: "/profile" },
     { key: "notif", label: t.menu.notifications, icon: Bell, to: null },
